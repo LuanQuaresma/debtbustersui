@@ -3,7 +3,3 @@ command: [
   "run",
   "app.py"
 ]
-
-env:
-  - name: GENIE_SPACE_ID
-    valueFrom: genie-space
