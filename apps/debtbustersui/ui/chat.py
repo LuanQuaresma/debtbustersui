@@ -32,14 +32,14 @@ def _ask(prompt: str) -> dict:
 def render_chat(starter_questions: list[str]) -> None:
     history = st.session_state.setdefault("chat_history", [])
 
-    title_col, action_col = st.columns([5, 1], vertical_alignment="center")
+    title_col, action_col = st.columns([3, 2], vertical_alignment="center")
     with title_col:
         section_title("AI assistant")
     action_col.button(
-        "New conversation", icon=":material/refresh:", on_click=_reset, disabled=not history, width="stretch"
+        "New chat", icon=":material/refresh:", on_click=_reset, disabled=not history, width="stretch"
     )
 
-    messages = st.container(height=480)
+    messages = st.container(height=360)
     with messages:
         if not history:
             st.caption("Ask a question about the data behind the dashboard, or pick a suggestion below.")

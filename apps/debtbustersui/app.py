@@ -22,7 +22,7 @@ from ui.theme import apply_theme, render_header
 
 CONFIG_PATH = Path(__file__).parent / "tabs.yaml"
 
-st.set_page_config(page_title="DebtBusters | GM Financial", layout="wide")
+st.set_page_config(page_title="DebtBusters | GM Financial", layout="wide", initial_sidebar_state="expanded")
 
 
 @st.cache_data
@@ -31,25 +31,20 @@ def load_config() -> dict:
 
 
 config = load_config()
-tabs = {t["id"]: t for t in config["tabs"]}
-default_tab = next(iter(tabs))
+tab_configs = config["tabs"]
 
 apply_theme()
 render_header(config.get("title", "DebtBusters"))
 
-selected = default_tab
-if len(tabs) > 1:
-    selected = st.segmented_control(
-        "Section",
-        options=list(tabs),
-        format_func=lambda tab_id: tabs[tab_id]["label"],
-        default=default_tab,
-        key="active_tab",
-        label_visibility="collapsed",
-    )
-# Clicking the active segment deselects it; keep showing the default instead.
-tab = tabs[selected or default_tab]
+active_tab = tab_configs[0]
+# on_change="rerun" enables lazy tabs: only the open tab's iframe is rendered.
+tab_containers = st.tabs([t["label"] for t in tab_configs], key="active_tab", on_change="rerun")
+for tab, container in zip(tab_configs, tab_containers):
+    if container.open:
+        active_tab = tab
+        with container:
+            render_dashboard(tab, config["dashboard"]["height"])
 
-render_dashboard(tab, config["dashboard"]["height"])
-render_summary(tab)
-render_chat(config.get("chat", {}).get("starter_questions", []))
+with st.sidebar:
+    render_summary(active_tab)
+    render_chat(config.get("chat", {}).get("starter_questions", []))
