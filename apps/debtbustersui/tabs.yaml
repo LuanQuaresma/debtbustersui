@@ -13,7 +13,7 @@ chat:
 tabs:
   - id: overview
     label: Overview
-    embed_url: "https://adb-7405604838131526.6.azuredatabricks.net/dashboardsv3/01f1cd540efe18bb8506acfc2bc8d8b3/published?o=7405604838131526"
+    embed_url: "https://adb-7405604838131526.6.azuredatabricks.net/embed/dashboardsv3/01f1cd540efe18bb8506acfc2bc8d8b3?o=7405604838131526"
     summary: |
       **Key points**
       - Placeholder summary for the Overview tab.
