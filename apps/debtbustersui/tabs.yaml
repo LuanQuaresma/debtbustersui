@@ -1,0 +1,28 @@
+title: DebtBusters
+
+dashboard:
+  height: 800
+
+chat:
+  starter_questions:
+    - What is the total outstanding debt?
+    - How did delinquency evolve over the last 6 months?
+    - Which segments have the highest risk?
+
+# embed_url: copy from the published dashboard's Share > Embed dialog (one page or dashboard per tab).
+tabs:
+  - id: overview
+    label: Overview
+    embed_url: ""
+    summary: |
+      **Key points**
+      - Placeholder summary for the Overview tab.
+      - Replace with the real executive summary.
+
+  - id: details
+    label: Details
+    embed_url: ""
+    summary: |
+      **Key points**
+      - Placeholder summary for the Details tab.
+      - Replace with the real executive summary.

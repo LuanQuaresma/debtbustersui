@@ -10,13 +10,46 @@ import app_diagnostics  # noqa: E402
 app_diagnostics.install_diagnostics()
 # --- end diagnostics bootstrap ---
 
+from pathlib import Path
+
 import streamlit as st
-import pandas as pd
+import yaml
 
-st.set_page_config(layout="wide")
+from ui.chat import render_chat
+from ui.dashboard import render_dashboard
+from ui.summary import render_summary
+from ui.theme import apply_theme, render_header
 
-st.header("Hello world!!!")
-apps = st.slider("Number of apps", max_value=60, value=10)
-chart_data = pd.DataFrame({'y':[2 ** x for x in range(apps)]})
-st.bar_chart(chart_data, height=500, width=min(100+50*apps, 1000), 
-             use_container_width=False, x_label="Apps", y_label="Fun with data")
+CONFIG_PATH = Path(__file__).parent / "tabs.yaml"
+
+st.set_page_config(page_title="DebtBusters | GM Financial", layout="wide")
+
+
+@st.cache_data
+def load_config() -> dict:
+    return yaml.safe_load(CONFIG_PATH.read_text(encoding="utf-8"))
+
+
+config = load_config()
+tabs = {t["id"]: t for t in config["tabs"]}
+default_tab = next(iter(tabs))
+
+apply_theme()
+render_header(config.get("title", "DebtBusters"))
+
+selected = default_tab
+if len(tabs) > 1:
+    selected = st.segmented_control(
+        "Section",
+        options=list(tabs),
+        format_func=lambda tab_id: tabs[tab_id]["label"],
+        default=default_tab,
+        key="active_tab",
+        label_visibility="collapsed",
+    )
+# Clicking the active segment deselects it; keep showing the default instead.
+tab = tabs[selected or default_tab]
+
+render_dashboard(tab, config["dashboard"]["height"])
+render_summary(tab)
+render_chat(config.get("chat", {}).get("starter_questions", []))
