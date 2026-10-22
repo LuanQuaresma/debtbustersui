@@ -4,6 +4,7 @@ dashboard:
   height: 800
 
 chat:
+  genie_space_id: ""
   starter_questions:
     - What is the total outstanding debt?
     - How did delinquency evolve over the last 6 months?

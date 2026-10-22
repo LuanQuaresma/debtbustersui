@@ -22,7 +22,8 @@ header[data-testid="stHeader"] { background: transparent; }
 [data-testid="stDecoration"], [data-testid="stMainMenu"], [data-testid="stAppDeployButton"], footer { display: none; }
 [data-testid="stMainBlockContainer"] { padding: 1rem 1.5rem 1rem; max-width: 100%; }
 
-section[data-testid="stSidebar"][data-collapsed="false"] {
+section[data-testid="stSidebar"][data-collapsed="false"],
+section[data-testid="stSidebar"][aria-expanded="true"] {
   width: 30vw !important; min-width: 30vw !important; max-width: 30vw !important;
   border-right: 1px solid var(--gmf-border);
 }
@@ -44,11 +45,27 @@ section[data-testid="stSidebar"][data-collapsed="false"] {
   background: var(--gmf-blue) !important; border-radius: 8px !important;
   box-shadow: 0 2px 6px rgba(0, 59, 113, .35);
 }
+[data-testid="stSidebarCollapsedControl"] {
+  position: fixed !important; left: 0; top: 50%; transform: translateY(-50%); z-index: 1000;
+}
+[data-testid="stSidebarCollapsedControl"] [data-testid="stLogo"] { display: none !important; }
+[data-testid="stSidebarCollapsedControl"] button {
+  display: flex !important; flex-direction: column; gap: .5rem; height: auto !important;
+  padding: .9rem .4rem !important; border-radius: 0 10px 10px 0 !important;
+  background: var(--gmf-blue) !important; box-shadow: 2px 2px 8px rgba(0, 59, 113, .35);
+}
+[data-testid="stSidebarCollapsedControl"] button::after {
+  content: "Summary & AI chat"; writing-mode: vertical-rl;
+  color: #fff; font-size: .85rem; font-weight: 600;
+}
+[data-testid="stSidebarCollapsedControl"] button:hover { background: var(--gmf-navy) !important; }
 [data-testid="stExpandSidebarButton"]:hover, [data-testid="stSidebarCollapseButton"] button:hover {
   background: var(--gmf-navy) !important;
 }
-[data-testid="stExpandSidebarButton"] *, [data-testid="stSidebarCollapseButton"] button * { color: #fff !important; }
-.stApp:has([data-testid="stSidebar"][data-collapsed="true"]) [data-testid="stMainBlockContainer"] { padding-left: 3rem; }
+[data-testid="stExpandSidebarButton"] *, [data-testid="stSidebarCollapseButton"] button *,
+[data-testid="stSidebarCollapsedControl"] button * { color: #fff !important; }
+.stApp:has([data-testid="stSidebar"][data-collapsed="true"]) [data-testid="stMainBlockContainer"],
+.stApp:has([data-testid="stSidebar"][aria-expanded="false"]) [data-testid="stMainBlockContainer"] { padding-left: 3rem; }
 
 .gmf-header {
   display: flex; align-items: center; gap: 1.25rem;
@@ -81,7 +98,7 @@ iframe[data-testid="stIFrame"] {
 
 
 def apply_theme() -> None:
-    st.html(_CSS)
+  st.markdown(_CSS, unsafe_allow_html=True)
 
 
 @st.cache_resource
@@ -94,14 +111,15 @@ def _logo_data_uri() -> str:
 
 
 def render_header(title: str) -> None:
-    st.html(
+  st.markdown(
         '<div class="gmf-header">'
         f'<img class="gmf-logo" src="{_logo_data_uri()}" alt="GM Financial">'
         '<span class="gmf-divider"></span>'
         f'<span class="gmf-app">{escape(title)}</span>'
-        "</div>"
+        "</div>",
+        unsafe_allow_html=True,
     )
 
 
 def section_title(text: str) -> None:
-    st.html(f'<div class="gmf-section">{escape(text)}</div>')
+  st.markdown(f'<div class="gmf-section">{escape(text)}</div>', unsafe_allow_html=True)

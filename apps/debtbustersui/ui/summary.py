@@ -7,5 +7,5 @@ def get_summary(tab: dict) -> str:
 
 
 def render_summary(tab: dict) -> None:
-    with st.expander(f"Executive summary — {tab['label']}", icon=":material/insights:", expanded=True):
+    with st.expander(f"Executive summary — {tab['label']}", expanded=True):
         st.markdown(get_summary(tab))
